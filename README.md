@@ -115,6 +115,22 @@ def fetch_train_data():
     ├── requirements.txt      # File containing all the dependencies
     └── README.md             # Project documentation
 
+3. tasks.py:
+    ```
+    from celery import shared_task
+    from .api import fetch_train_data
+
+    @shared_task
+    def fetch_train_data_task():
+        fetch_train_data()
+        # Process and temporarily store the data
+
+    @shared_task
+    def save_data_to_db_task():
+        # Access the temporarily stored data
+        # Save or update the data in the database
+    ```
+
 ## Configuration and Deployment
 
 1. Update your `settings.py` for database and Celery configurations.
