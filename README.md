@@ -90,7 +90,8 @@ This Django application, `train_tracker`, is designed to track trains using the 
 
 1. Document your code with docstrings and comments for clarity.
 
-2. Project structure: 
+2. Project structure:
+    ```
     Django Train Tracker Project
     │
     ├── train_tracker
@@ -114,6 +115,7 @@ This Django application, `train_tracker`, is designed to track trains using the 
     ├── manage.py
     ├── requirements.txt      # File containing all the dependencies
     └── README.md             # Project documentation
+    ```
 
 3. tasks.py:
     ```
