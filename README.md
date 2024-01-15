@@ -18,6 +18,31 @@ This Django application, `train_tracker`, is designed to track trains using the 
    python manage.py makemigrations
    python manage.py migrate
    ```
+3. models.py: 
+```
+from django.db import models
+
+class Train(models.Model):
+    train_number = models.CharField(max_length=50)
+    train_type = models.CharField(max_length=50)
+    # Add more fields as provided by the API
+
+class Station(models.Model):
+    name = models.CharField(max_length=100)
+    station_code = models.CharField(max_length=20)
+    # Additional station details
+
+class Journey(models.Model):
+    train = models.ForeignKey(Train, on_delete=models.CASCADE)
+    origin_station = models.ForeignKey(Station, related_name='departure_station', on_delete=models.CASCADE)
+    destination_station = models.ForeignKey(Station, related_name='arrival_station', on_delete=models.CASCADE)
+    scheduled_departure = models.DateTimeField()
+    actual_departure = models.DateTimeField()
+    scheduled_arrival = models.DateTimeField()
+    actual_arrival = models.DateTimeField()
+    status = models.CharField(max_length=100)  # e.g., On Time, Delayed, Cancelled
+    delay_duration = models.IntegerField(null=True, blank=True)  # Delay in minutes
+```
 
 ## API Interaction
 
@@ -26,6 +51,26 @@ This Django application, `train_tracker`, is designed to track trains using the 
    pip install requests
    ```
 2. Implement API interaction logic in `train_tracker/api.py`.
+
+3. api.py:
+```
+import requests
+from .models import Train, Station, Journey
+
+def fetch_train_data():
+    # Placeholder for the API endpoint URL
+    api_url = 'https://v5.db.transport.rest/api_endpoint'
+
+    response = requests.get(api_url)
+    if response.status_code == 200:
+        data = response.json()
+        # Parse and process the data
+        # Example: create_or_update_train(data)
+    else:
+        # Handle errors
+
+# Define more functions as needed to interact with different endpoints
+```
 
 ## Scheduling and Background Tasks
 
@@ -44,6 +89,31 @@ This Django application, `train_tracker`, is designed to track trains using the 
 ## Documentation
 
 1. Document your code with docstrings and comments for clarity.
+
+2. Project structure: 
+    Django Train Tracker Project
+    │
+    ├── train_tracker
+    │   ├── __init__.py
+    │   ├── admin.py
+    │   ├── api.py             # Custom module for API interaction
+    │   ├── apps.py
+    │   ├── models.py          # Models for Train, Station, Journey, etc.
+    │   ├── tasks.py           # Celery tasks for periodic updates
+    │   ├── tests.py           # Tests for your application
+    │   ├── urls.py
+    │   └── views.py           # Views for handling business logic
+    │
+    ├── project_name          # Your main project directory
+    │   ├── __init__.py
+    │   ├── asgi.py
+    │   ├── settings.py        # Django settings, include Celery config
+    │   ├── urls.py
+    │   └── wsgi.py
+    │
+    ├── manage.py
+    ├── requirements.txt      # File containing all the dependencies
+    └── README.md             # Project documentation
 
 ## Configuration and Deployment
 
